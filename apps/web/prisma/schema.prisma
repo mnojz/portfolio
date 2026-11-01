@@ -1,6 +1,7 @@
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 generator client {
@@ -27,11 +28,10 @@ model GuestbookEntry {
 }
 
 model Discovery {
-  id          String   @id @default(uuid())
-  secretId    String
-  visitorId   String
+  id           String   @id @default(uuid())
+  secretId     String
+  visitorId    String
   discoveredAt DateTime @default(now())
 
   @@unique([secretId, visitorId])
 }
-
