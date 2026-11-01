@@ -7,3 +7,4 @@ export default defineConfig({
     url: env("DATABASE_URL_UNPOOLED") || env("DATABASE_URL"),
   },
 });
+
