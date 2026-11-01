@@ -8,12 +8,12 @@ import {
   VolumeX,
   MapPin,
   Palette,
-  Sparkles,
   ShieldCheck,
   Sun,
   Moon,
   FileText,
   Gamepad2,
+  Sparkles,
 } from "lucide-react";
 import { useGameStore } from "@/stores/useGameStore";
 import { useMultiplayerStore } from "@/stores/useMultiplayerStore";
@@ -45,36 +45,38 @@ export const HUD: React.FC = () => {
   const timeString = `${formattedHour % 12 || 12}:${formattedMinutes} ${formattedHour >= 12 ? "PM" : "AM"}`;
 
   return (
-    <div className="absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-4 sm:p-6 overflow-hidden">
-      {/* Top Header Row */}
-      <div className="flex items-center justify-between gap-4">
-        {/* Top-Left: World Title, Current Location, & 3D / Classic Toggle */}
-        <div className="flex flex-wrap items-center gap-2.5 pointer-events-auto">
-          {/* Logo Badge */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/85 backdrop-blur-md border border-amber-600/40 shadow-lg text-amber-100">
-            <span className="text-base">🌲</span>
-            <div>
-              <div className="text-xs font-bold tracking-wider uppercase">Mosswood</div>
-              <div className="text-[10px] text-amber-300/80 font-medium leading-none">Manoj&apos;s 3D World</div>
+    <div className="absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-4 sm:p-6 overflow-hidden font-sans">
+      {/* Top Floating Glass Header Row */}
+      <div className="flex items-center justify-between gap-3">
+        {/* Top-Left: Logo, Location & View Toggle */}
+        <div className="flex flex-wrap items-center gap-2 pointer-events-auto">
+          {/* Logo & World Pill */}
+          <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-950/60 backdrop-blur-xl border border-white/10 shadow-lg text-slate-100 transition-all hover:bg-slate-950/70">
+            <span className="text-sm">🌲</span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-serif font-bold text-sm tracking-wide text-amber-100">
+                Mosswood
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             </div>
           </div>
 
           {/* Current Location Badge */}
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/85 backdrop-blur-md border border-slate-700/60 shadow-lg text-slate-200 text-xs font-semibold">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/50 backdrop-blur-xl border border-white/10 text-xs font-medium text-slate-200 shadow-md">
             <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{currentLocationName || "Peaceful Meadows"}</span>
+            <span className="truncate max-w-[180px]">{currentLocationName || "Peaceful Meadows"}</span>
           </div>
 
-          {/* 3D World ⇄ Classic Portfolio Toggle Switch */}
-          <div className="flex items-center p-0.5 rounded-xl bg-slate-900/85 backdrop-blur-md border border-slate-700/80 shadow-lg">
+          {/* 3D World ⇄ Classic CV Toggle */}
+          <div className="flex items-center p-1 rounded-full bg-slate-950/60 backdrop-blur-xl border border-white/10 shadow-lg">
             <button
               onClick={() => {
                 playChime();
                 setViewMode("3d");
               }}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 viewMode === "3d"
-                  ? "bg-amber-500 text-slate-950 font-bold shadow"
+                  ? "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -86,9 +88,9 @@ export const HUD: React.FC = () => {
                 playChime();
                 setViewMode("classic");
               }}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 viewMode === "classic"
-                  ? "bg-amber-500 text-slate-950 font-bold shadow"
+                  ? "bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -98,23 +100,23 @@ export const HUD: React.FC = () => {
           </div>
         </div>
 
-        {/* Top-Right: Visitors, Clock, Audio & Admin */}
+        {/* Top-Right: Visitors, Time, Audio & Admin */}
         <div className="flex items-center gap-2 pointer-events-auto">
           {/* Online Visitors Counter */}
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/85 backdrop-blur-md border border-slate-700/80 shadow-lg text-slate-200 text-xs font-medium">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/60 backdrop-blur-xl border border-white/10 shadow-lg text-slate-200 text-xs font-medium">
             <Users className="w-3.5 h-3.5 text-sky-400" />
             <span>
               {onlineCount} {onlineCount === 1 ? "visitor" : "visitors"}
             </span>
             <span
               className={`w-2 h-2 rounded-full ${
-                isConnected ? "bg-emerald-400 animate-pulse" : "bg-amber-400"
+                isConnected ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" : "bg-amber-400"
               }`}
             />
           </div>
 
-          {/* Dynamic Day/Night Clock */}
-          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/85 backdrop-blur-md border border-slate-700/80 shadow-lg text-slate-300 text-xs font-mono">
+          {/* Day/Night Clock */}
+          <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950/60 backdrop-blur-xl border border-white/10 text-slate-300 text-xs font-mono shadow-md">
             {isNight ? (
               <Moon className="w-3.5 h-3.5 text-amber-300" />
             ) : (
@@ -123,100 +125,101 @@ export const HUD: React.FC = () => {
             <span>{timeString}</span>
           </div>
 
-          {/* Audio Mute/Unmute */}
+          {/* Audio Toggle */}
           <button
-            onClick={() => {
-              toggleMute();
-            }}
-            className="p-2 rounded-xl bg-slate-900/85 hover:bg-slate-800 backdrop-blur-md border border-slate-700/80 shadow-lg text-slate-300 hover:text-amber-300 transition-colors cursor-pointer"
-            title={isMuted ? "Unmute Audio" : "Mute Audio"}
+            onClick={toggleMute}
+            className="p-2 rounded-full bg-slate-950/60 hover:bg-slate-900/90 backdrop-blur-xl border border-white/10 text-slate-300 hover:text-amber-300 transition-all shadow-md cursor-pointer active:scale-95"
+            title={isMuted ? "Unmute Ambient Sound" : "Mute Sound"}
           >
-            {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
+            {isMuted ? <VolumeX className="w-3.5 h-3.5 text-rose-400" /> : <Volume2 className="w-3.5 h-3.5 text-emerald-400" />}
           </button>
 
-          {/* Admin / Owner Login Button */}
+          {/* Admin / Creator Button */}
           <button
             onClick={() => {
               playChime();
               openModal("admin_login");
             }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl backdrop-blur-md border shadow-lg text-xs font-semibold transition-transform active:scale-95 cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full backdrop-blur-xl border shadow-lg text-xs font-semibold transition-all active:scale-95 cursor-pointer ${
               isOwner
-                ? "bg-amber-500/90 hover:bg-amber-400 border-amber-300 text-slate-950 font-bold"
-                : "bg-slate-900/85 hover:bg-slate-800 border-slate-700/80 text-slate-300"
+                ? "bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 border-amber-300 shadow-amber-500/20 font-bold"
+                : "bg-slate-950/60 hover:bg-slate-900/90 text-slate-200 border-white/10"
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>{isOwner ? "👑 Creator" : "Owner Login"}</span>
+            <span>{isOwner ? "👑 Creator" : "Owner"}</span>
           </button>
         </div>
       </div>
 
-      {/* Bottom Bar Row */}
+      {/* Bottom Floating Island Row */}
       <div className="flex items-end justify-between gap-4">
-        {/* Bottom-Left: Keyboard Controls Hint */}
-        <div className="hidden md:flex flex-col gap-1 p-2.5 rounded-xl bg-slate-900/80 backdrop-blur-md border border-slate-800 text-[11px] text-slate-300 shadow-xl pointer-events-auto">
+        {/* Bottom-Left: Subtle Tactile Keyboard Hint */}
+        <div className="hidden md:flex flex-col gap-1.5 px-3.5 py-2.5 rounded-2xl bg-slate-950/50 backdrop-blur-xl border border-white/5 text-[11px] text-slate-300 shadow-xl pointer-events-auto">
           <div className="flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px]">W</kbd>
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px]">A</kbd>
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px]">S</kbd>
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px]">D</kbd>
-            <span className="text-slate-400">Move</span>
+            <span className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-mono text-[10px] text-slate-100 shadow-sm">W</span>
+            <span className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-mono text-[10px] text-slate-100 shadow-sm">A</span>
+            <span className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-mono text-[10px] text-slate-100 shadow-sm">S</span>
+            <span className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-mono text-[10px] text-slate-100 shadow-sm">D</span>
+            <span className="text-slate-400 ml-0.5">Move</span>
             <span className="mx-1 text-slate-600">•</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px]">Shift</kbd>
+            <span className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-mono text-[10px] text-slate-100 shadow-sm">Shift</span>
             <span className="text-slate-400">Run</span>
             <span className="mx-1 text-slate-600">•</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px]">Space</kbd>
+            <span className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-mono text-[10px] text-slate-100 shadow-sm">Space</span>
             <span className="text-slate-400">Jump</span>
           </div>
           <div className="flex items-center gap-1.5 text-slate-400">
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px]">E</kbd>
-            <span>Interact</span>
+            <span className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-mono text-[10px] text-slate-100 shadow-sm">E</span>
+            <span>Inspect</span>
             <span className="mx-1 text-slate-600">•</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px]">Enter</kbd>
+            <span className="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 font-mono text-[10px] text-slate-100 shadow-sm">Enter</span>
             <span>Chat Invite</span>
             <span className="mx-1 text-slate-600">•</span>
-            <span>Drag mouse to orbit camera</span>
+            <span className="text-slate-500">Drag mouse to orbit</span>
           </div>
         </div>
 
-        {/* Bottom-Right: Emotes, Character Customizer, & Map */}
+        {/* Bottom-Right: Floating Game Dock (Emotes, Avatar, Map) */}
         <div className="flex items-center gap-2 pointer-events-auto">
-          {/* Emotes Bar */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-900/85 backdrop-blur-md border border-slate-700/80 shadow-lg">
+          {/* Emotes Pill */}
+          <div className="flex items-center gap-1 p-1 rounded-full bg-slate-950/60 backdrop-blur-xl border border-white/10 shadow-lg">
             <button
               onClick={() => sendEmote("wave")}
-              className="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-amber-300 transition-colors"
+              className="px-3 py-1.5 rounded-full text-xs font-medium text-slate-200 hover:bg-white/10 transition-colors flex items-center gap-1"
               title="Wave (Key 1)"
             >
-              👋 Wave
+              <span>👋</span>
+              <span className="hidden sm:inline">Wave</span>
             </button>
             <button
               onClick={() => sendEmote("dance")}
-              className="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-amber-300 transition-colors"
+              className="px-3 py-1.5 rounded-full text-xs font-medium text-slate-200 hover:bg-white/10 transition-colors flex items-center gap-1"
               title="Dance (Key 2)"
             >
-              🕺 Dance
+              <span>🕺</span>
+              <span className="hidden sm:inline">Dance</span>
             </button>
             <button
               onClick={() => sendEmote("sit")}
-              className="px-2.5 py-1 rounded-lg text-xs font-medium text-slate-200 hover:bg-slate-800 hover:text-amber-300 transition-colors"
+              className="px-3 py-1.5 rounded-full text-xs font-medium text-slate-200 hover:bg-white/10 transition-colors flex items-center gap-1"
               title="Sit (Key 3)"
             >
-              🪑 Sit
+              <span>🪑</span>
+              <span className="hidden sm:inline">Sit</span>
             </button>
           </div>
 
-          {/* Character Customizer Button */}
+          {/* Avatar Customizer Button */}
           <button
             onClick={() => {
               playChime();
               openModal("customizer");
             }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/85 hover:bg-slate-800 backdrop-blur-md border border-slate-700/80 shadow-lg text-slate-200 text-xs font-semibold cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-slate-950/60 hover:bg-slate-900/90 backdrop-blur-xl border border-white/10 shadow-lg text-slate-200 text-xs font-semibold cursor-pointer transition-all active:scale-95"
             title="Customize Character"
           >
-            <Palette className="w-4 h-4 text-pink-400" />
+            <Palette className="w-3.5 h-3.5 text-pink-400" />
             <span className="hidden sm:inline">Avatar</span>
           </button>
 
@@ -226,10 +229,10 @@ export const HUD: React.FC = () => {
               playChime();
               openModal("map");
             }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 backdrop-blur-md border border-amber-400 shadow-lg text-slate-950 text-xs font-bold cursor-pointer transition-transform active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold shadow-lg shadow-amber-500/20 cursor-pointer transition-all active:scale-95"
             title="Open World Map"
           >
-            <Compass className="w-4 h-4" />
+            <Compass className="w-3.5 h-3.5" />
             <span>Map</span>
           </button>
         </div>
@@ -237,4 +240,3 @@ export const HUD: React.FC = () => {
     </div>
   );
 };
-

@@ -28,14 +28,12 @@ export const AdminAuthModal: React.FC = () => {
 
   if (activeModal !== "admin_login") return null;
 
-  // Handle Login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      // First ensure setup is run if needed
       await fetch("/api/auth/setup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,16 +54,15 @@ export const AdminAuthModal: React.FC = () => {
       login(data.token, data.user);
       customizeAvatar("#F59E0B", "crown", `${data.user.username} (Creator)`);
 
-      // Notify multiplayer server
       const room = useMultiplayerStore.getState().room;
       if (room) {
         room.send("auth", { token: data.token });
       }
 
-      setSuccessMsg("Welcome back, Manoj! Creator privileges activated.");
+      setSuccessMsg("Welcome home, Manoj! Creator privileges activated.");
       setTimeout(() => {
         closeModal();
-      }, 1500);
+      }, 1400);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -74,53 +71,53 @@ export const AdminAuthModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-md rounded-3xl bg-amber-50 text-slate-900 border-4 border-amber-800 shadow-2xl p-6 space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md animate-fade-in font-sans">
+      <div className="relative w-full max-w-md rounded-3xl bg-[#FAF7F2] text-slate-800 border border-stone-300 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] p-6 space-y-4 animate-modal-pop">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b-2 border-amber-700/30">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between pb-3 border-b border-stone-200">
+          <div className="flex items-center gap-2.5">
             <span className="text-xl">👑</span>
             <div>
-              <h2 className="text-lg font-serif font-black text-amber-950">Creator Control Panel</h2>
-              <p className="text-xs text-amber-800">Portfolio Owner Authentication</p>
+              <h2 className="text-lg font-serif font-bold text-amber-950">Creator Sanctum</h2>
+              <p className="text-xs text-amber-800/80">Owner Access & House Permissions</p>
             </div>
           </div>
           <button
             onClick={closeModal}
-            className="p-1.5 rounded-full hover:bg-amber-200 text-amber-900 transition-colors"
+            className="p-1.5 rounded-full hover:bg-stone-200 text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {isOwner ? (
-          /* Logged In Owner Controls */
+          /* Logged In Owner Dashboard */
           <div className="space-y-4 py-2">
-            <div className="p-3.5 rounded-2xl bg-amber-100 border border-amber-400 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-lg shadow">
+            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-center gap-3.5 shadow-sm">
+              <div className="w-11 h-11 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-xl shadow-md border border-amber-300">
                 👑
               </div>
               <div>
-                <div className="text-xs uppercase font-bold text-amber-800">Logged in as</div>
-                <div className="text-sm font-black text-amber-950 font-serif">{user?.username} (Portfolio Creator)</div>
+                <div className="text-[10px] uppercase font-bold tracking-wider text-amber-800">Verified Owner</div>
+                <div className="text-base font-bold text-stone-900 font-serif">{user?.username} (Portfolio Creator)</div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <div className="text-xs font-bold uppercase tracking-wider text-amber-900">
+              <div className="text-xs font-bold uppercase tracking-wider text-stone-700">
                 The Home Controls
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2.5">
                 <button
                   onClick={() => toggleDoor(!isHomeUnlocked)}
-                  className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold shadow transition-transform active:scale-95 cursor-pointer ${
+                  className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold shadow-sm transition-all active:scale-95 cursor-pointer ${
                     isHomeUnlocked
-                      ? "bg-amber-800 hover:bg-amber-900 text-amber-50 border-amber-900"
-                      : "bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-700"
+                      ? "bg-amber-900 hover:bg-amber-800 text-amber-50 border-amber-950"
+                      : "bg-emerald-700 hover:bg-emerald-600 text-white border-emerald-800"
                   }`}
                 >
                   {isHomeUnlocked ? <DoorClosed className="w-4 h-4" /> : <DoorOpen className="w-4 h-4" />}
-                  <span>{isHomeUnlocked ? "Lock Cottage Door" : "Unlock Cottage Door"}</span>
+                  <span>{isHomeUnlocked ? "Lock Cottage" : "Unlock Cottage"}</span>
                 </button>
 
                 <button
@@ -129,16 +126,16 @@ export const AdminAuthModal: React.FC = () => {
                     setSuccessMsg("Broadcast invitation sent to all visitors!");
                     setTimeout(() => setSuccessMsg(null), 3000);
                   }}
-                  className="flex items-center justify-center gap-2 p-3 rounded-xl bg-purple-700 hover:bg-purple-600 text-white border border-purple-800 text-xs font-bold shadow transition-transform active:scale-95 cursor-pointer"
+                  className="flex items-center justify-center gap-2 p-3 rounded-xl bg-purple-800 hover:bg-purple-700 text-white border border-purple-900 text-xs font-bold shadow-sm transition-all active:scale-95 cursor-pointer"
                 >
                   <Megaphone className="w-4 h-4" />
-                  <span>Invite All to House</span>
+                  <span>Invite to House</span>
                 </button>
               </div>
             </div>
 
             {successMsg && (
-              <div className="p-2.5 rounded-xl bg-emerald-100 border border-emerald-400 text-emerald-900 text-xs font-bold flex items-center gap-1.5">
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
                 <Check className="w-4 h-4 text-emerald-600" />
                 {successMsg}
               </div>
@@ -146,7 +143,7 @@ export const AdminAuthModal: React.FC = () => {
 
             <button
               onClick={logout}
-              className="w-full py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold transition-colors cursor-pointer"
+              className="w-full py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-bold transition-colors cursor-pointer"
             >
               Sign Out
             </button>
@@ -154,12 +151,12 @@ export const AdminAuthModal: React.FC = () => {
         ) : (
           /* Login Form */
           <form onSubmit={handleLogin} className="space-y-3.5">
-            <p className="text-xs text-slate-700 leading-relaxed">
-              When logged in as the Creator, you receive the golden <strong>👑 [OWNER]</strong> crown badge, unlock The Home cottage, and can invite visitors inside.
+            <p className="text-xs text-stone-600 leading-relaxed">
+              Authenticate as the Creator to unlock <strong>The Home</strong>, wear the <strong>👑 Crown</strong>, and invite visitors inside.
             </p>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">
+              <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                 Username
               </label>
               <input
@@ -167,13 +164,13 @@ export const AdminAuthModal: React.FC = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="manoj"
-                className="w-full px-3 py-2 rounded-xl bg-amber-100 border border-amber-300 text-xs text-amber-950 font-semibold focus:outline-none focus:border-amber-700"
+                className="w-full px-3.5 py-2 rounded-xl bg-white border border-stone-300 text-xs text-stone-900 font-semibold focus:outline-none focus:border-amber-700 shadow-sm transition-colors"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">
+              <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                 Password
               </label>
               <input
@@ -181,22 +178,22 @@ export const AdminAuthModal: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password..."
-                className="w-full px-3 py-2 rounded-xl bg-amber-100 border border-amber-300 text-xs text-amber-950 font-semibold focus:outline-none focus:border-amber-700"
+                className="w-full px-3.5 py-2 rounded-xl bg-white border border-stone-300 text-xs text-stone-900 font-semibold focus:outline-none focus:border-amber-700 shadow-sm transition-colors"
                 required
               />
-              <span className="text-[10px] text-amber-700 mt-1 block">
-                (Default dev password: <code>creator2026</code> or <code>password123</code>)
+              <span className="text-[10px] text-stone-500 mt-1 block">
+                Default credentials: <code>creator2026</code> or <code>password123</code>
               </span>
             </div>
 
             {error && (
-              <div className="p-2.5 rounded-xl bg-red-100 border border-red-300 text-red-900 text-xs font-semibold">
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold">
                 {error}
               </div>
             )}
 
             {successMsg && (
-              <div className="p-2.5 rounded-xl bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs font-semibold">
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
                 {successMsg}
               </div>
             )}
@@ -204,7 +201,7 @@ export const AdminAuthModal: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-xl bg-amber-800 hover:bg-amber-900 disabled:opacity-50 text-amber-50 font-bold text-sm shadow-lg transition-transform active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-xl bg-amber-900 hover:bg-amber-800 disabled:opacity-50 text-amber-50 font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
             >
               <KeyRound className="w-4 h-4" />
               <span>{loading ? "Authenticating..." : "Sign In as Creator"}</span>
@@ -215,4 +212,3 @@ export const AdminAuthModal: React.FC = () => {
     </div>
   );
 };
-
