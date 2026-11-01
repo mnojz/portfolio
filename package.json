@@ -1,0 +1,31 @@
+{
+  "name": "mosswood-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mosswood — A Living, Multiplayer 3D Developer Portfolio",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:server": "npm run dev --workspace=apps/server",
+    "build": "npm run build --workspaces --if-present",
+    "start": "npm run start --workspaces --if-present",
+    "server:start": "npm run start --workspace=apps/server",
+    "web:start": "npm run start --workspace=apps/web"
+  },
+  "keywords": [
+    "portfolio",
+    "threejs",
+    "react-three-fiber",
+    "colyseus",
+    "multiplayer",
+    "low-poly",
+    "nextjs"
+  ],
+  "author": "Manoj",
+  "license": "MIT"
+}
+

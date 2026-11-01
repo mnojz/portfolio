@@ -1,0 +1,37 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+  role         String   @default("OWNER") // OWNER, ADMIN, GUEST
+  avatarHat    String   @default("crown")
+  avatarColor  String   @default("#F59E0B")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model GuestbookEntry {
+  id          String   @id @default(uuid())
+  authorName  String
+  message     String
+  avatarColor String   @default("#3B82F6")
+  createdAt   DateTime @default(now())
+}
+
+model Discovery {
+  id          String   @id @default(uuid())
+  secretId    String
+  visitorId   String
+  discoveredAt DateTime @default(now())
+
+  @@unique([secretId, visitorId])
+}
+
