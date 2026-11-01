@@ -57,7 +57,19 @@ interface MultiplayerState {
   dismissNotification: (id: string) => void;
 }
 
-const WS_URL = process.env.NEXT_PUBLIC_MULTIPLAYER_WS_URL || "ws://localhost:2567";
+const getWebSocketUrl = (): string => {
+  if (process.env.NEXT_PUBLIC_MULTIPLAYER_WS_URL) {
+    return process.env.NEXT_PUBLIC_MULTIPLAYER_WS_URL;
+  }
+  if (typeof window !== "undefined") {
+    const isSecure = window.location.protocol === "https:";
+    const protocol = isSecure ? "wss:" : "ws:";
+    if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+      return `${protocol}//${window.location.host}/multiplayer`;
+    }
+  }
+  return "ws://localhost:2567";
+};
 
 export const useMultiplayerStore = create<MultiplayerState>((set, get) => ({
   client: null,
@@ -79,7 +91,8 @@ export const useMultiplayerStore = create<MultiplayerState>((set, get) => ({
     set({ isConnecting: true, connectionError: null });
 
     try {
-      const client = new Client(WS_URL);
+      const wsUrl = getWebSocketUrl();
+      const client = new Client(wsUrl);
       const token = useAuthStore.getState().token;
       const savedUser = useAuthStore.getState().user;
 

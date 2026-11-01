@@ -14,9 +14,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Health Check Endpoint
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", service: "mosswood-multiplayer", timestamp: Date.now() });
+// Health Check Endpoints (supporting root, direct /health, and /multiplayer prefix)
+app.get(["/", "/health", "/multiplayer", "/multiplayer/health"], (req, res) => {
+  res.json({
+    status: "ok",
+    service: "mosswood-multiplayer",
+    timestamp: Date.now(),
+    framework: "express + colyseus",
+  });
 });
 
 const server = http.createServer(app);
@@ -30,8 +35,12 @@ const gameServer = new Server({
 // Register World Room
 gameServer.define("world", WorldRoom);
 
-server.listen(port, () => {
-  console.log(`🌲 Mosswood Multiplayer Server running on ws://localhost:${port}`);
-  console.log(`🌐 Health check available at http://localhost:${port}/health`);
-});
+if (process.env.NODE_ENV !== "test") {
+  server.listen(port, () => {
+    console.log(`🌲 Mosswood Multiplayer Server running on ws://localhost:${port}`);
+    console.log(`🌐 Health check available at http://localhost:${port}/health`);
+  });
+}
 
+export { app, gameServer };
+export default server;
